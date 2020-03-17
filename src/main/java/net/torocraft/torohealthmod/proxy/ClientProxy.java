@@ -1,5 +1,7 @@
 package net.torocraft.torohealthmod.proxy;
 
+import cpw.mods.fml.common.event.FMLInitializationEvent;
+import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -8,6 +10,17 @@ import net.minecraft.world.World;
 import net.torocraft.torohealthmod.render.DamageParticles;
 
 public class ClientProxy extends CommonProxy {
+
+    @Override
+    public void preInit(FMLPreInitializationEvent e) {
+        super.preInit(e);
+    }
+
+    @Override
+    public void init(FMLInitializationEvent e) {
+        super.init(e);
+    }
+
 
     @Override
     public void displayDamageDealt(EntityLivingBase entity) {
@@ -22,7 +35,7 @@ public class ClientProxy extends CommonProxy {
             int entityHealth = ((NBTTagInt) entity.getEntityData().getTag("health")).func_150287_d();
 
             if (entityHealth != currentHealth) {
-                displayParticle(entity, (int) entityHealth - currentHealth);
+                displayParticle(entity, entityHealth - currentHealth);
             }
         }
 
