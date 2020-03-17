@@ -1,21 +1,18 @@
 package net.torocraft.torohealthmod.render;
 
-import org.lwjgl.opengl.GL11;
-
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.particle.EntityFX;
 import net.minecraft.client.renderer.OpenGlHelper;
-import net.minecraft.client.renderer.WorldRenderer;
-import net.minecraft.entity.Entity;
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import net.torocraft.torohealthmod.config.ConfigurationHandler;
+import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
-public class DamageParticle extends EntityFX {
+public class DamageParticles extends EntityFX {
 
 	protected static final float GRAVITY = 0.1F;
 	protected static final float SIZE = 3.0F;
@@ -28,7 +25,7 @@ public class DamageParticle extends EntityFX {
 	protected float scale = 1.0F;
 	private int damage;
 
-	public DamageParticle(int damage, World world, double parX, double parY, double parZ, double parMotionX, double parMotionY, double parMotionZ) {
+	public DamageParticles(int damage, World world, double parX, double parY, double parZ, double parMotionX, double parMotionY, double parMotionZ) {
 		super(world, parX, parY, parZ, parMotionX, parMotionY, parMotionZ);
 		particleTextureJitterX = 0.0F;
 		particleTextureJitterY = 0.0F;
@@ -39,18 +36,18 @@ public class DamageParticle extends EntityFX {
 		this.text = Integer.toString(Math.abs(damage));
 	}
 
-	protected DamageParticle(World worldIn, double posXIn, double posYIn, double posZIn) {
+	protected DamageParticles(World worldIn, double posXIn, double posYIn, double posZIn) {
 		this(0, worldIn, posXIn, posYIn, posZIn, 0, 0, 0);
 	}
 
 	@Override
-	public void renderParticle(WorldRenderer worldRendererIn, final Entity entity, final float x, final float y, final float z, final float dX, final float dY, final float dZ) {
+	public void renderParticle(Tessellator p_70539_1_, float p_70539_2_, float p_70539_3_, float p_70539_4_, float p_70539_5_, float p_70539_6_, float p_70539_7_) {
 		float rotationYaw = (-Minecraft.getMinecraft().thePlayer.rotationYaw);
 		float rotationPitch = Minecraft.getMinecraft().thePlayer.rotationPitch;
 
-		final float locX = ((float) (this.prevPosX + (this.posX - this.prevPosX) * x - interpPosX));
-		final float locY = ((float) (this.prevPosY + (this.posY - this.prevPosY) * y - interpPosY));
-		final float locZ = ((float) (this.prevPosZ + (this.posZ - this.prevPosZ) * z - interpPosZ));
+		float f11 = (float)(this.prevPosX + (this.posX - this.prevPosX) * (double)p_70539_2_ - interpPosX);
+		float f12 = (float)(this.prevPosY + (this.posY - this.prevPosY) * (double)p_70539_2_ - interpPosY);
+		float f13 = (float)(this.prevPosZ + (this.posZ - this.prevPosZ) * (double)p_70539_2_ - interpPosZ);
 
 		GL11.glPushMatrix();
 		if (this.shouldOnTop) {
@@ -58,7 +55,7 @@ public class DamageParticle extends EntityFX {
 		} else {
 			GL11.glDepthFunc(515);
 		}
-		GL11.glTranslatef(locX, locY, locZ);
+		GL11.glTranslatef(f11, f12, f13);
 		GL11.glRotatef(rotationYaw, 0.0F, 1.0F, 0.0F);
 		GL11.glRotatef(rotationPitch, 1.0F, 0.0F, 0.0F);
 
@@ -79,12 +76,12 @@ public class DamageParticle extends EntityFX {
 		GL11.glEnable(3008);
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 
-		int color = ConfigurationHandler.damageColor;
+		int color = 0xff0000;
 		if (damage < 0) {
-			color = ConfigurationHandler.healColor;
+			color = 0x00ff00;
 		}
 
-		final FontRenderer fontRenderer = Minecraft.getMinecraft().fontRendererObj;
+		final FontRenderer fontRenderer = Minecraft.getMinecraft().fontRenderer;
 		fontRenderer.drawStringWithShadow(this.text, -MathHelper.floor_float(fontRenderer.getStringWidth(this.text) / 2.0F) + 1, -MathHelper.floor_float(fontRenderer.FONT_HEIGHT / 2.0F) + 1, color);
 
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);

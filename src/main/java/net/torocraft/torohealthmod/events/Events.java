@@ -1,8 +1,7 @@
 package net.torocraft.torohealthmod.events;
 
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.torocraft.torohealthmod.ToroHealthMod;
 
 public class Events {
@@ -12,9 +11,4 @@ public class Events {
 		ToroHealthMod.proxy.displayDamageDealt(event.entityLiving);
 	}
 
-	@SubscribeEvent
-	public void displayEntityStatus(RenderGameOverlayEvent.Pre event) {
-		ToroHealthMod.proxy.setEntityInCrosshairs();
-	}
-	
 }
