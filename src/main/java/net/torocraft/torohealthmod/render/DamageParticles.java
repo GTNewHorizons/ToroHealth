@@ -9,15 +9,14 @@ import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
+import net.torocraft.torohealthmod.configuration.ConfigurationHandler;
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
 public class DamageParticles extends EntityFX {
 
 	protected static final float GRAVITY = 0.1F;
-	protected static final float SIZE = 3.0F;
 	protected static final int LIFESPAN = 12;
-	protected static final double BOUNCE_STRENGTH = 1.5F;
 
 	protected String text;
 	protected boolean shouldOnTop = true;
@@ -30,7 +29,7 @@ public class DamageParticles extends EntityFX {
 		particleTextureJitterX = 0.0F;
 		particleTextureJitterY = 0.0F;
 		particleGravity = GRAVITY;
-		particleScale = SIZE;
+		particleScale = ConfigurationHandler.size;
 		particleMaxAge = LIFESPAN;
 		this.damage = damage;
 		this.text = Integer.toString(Math.abs(damage));
@@ -76,9 +75,9 @@ public class DamageParticles extends EntityFX {
 		GL11.glEnable(3008);
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 
-		int color = 0xff0000;
+		int color = ConfigurationHandler.damageColor;
 		if (damage < 0) {
-			color = 0x00ff00;
+			color = ConfigurationHandler.healColor;
 		}
 
 		final FontRenderer fontRenderer = Minecraft.getMinecraft().fontRenderer;
@@ -90,7 +89,7 @@ public class DamageParticles extends EntityFX {
 		GL11.glPopMatrix();
 		if (this.grow) {
 			this.particleScale *= 1.08F;
-			if (this.particleScale > SIZE * 3.0D) {
+			if (this.particleScale > ConfigurationHandler.size * 3.0D) {
 				this.grow = false;
 			}
 		} else {

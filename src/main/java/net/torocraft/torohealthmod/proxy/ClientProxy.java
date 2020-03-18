@@ -3,10 +3,12 @@ package net.torocraft.torohealthmod.proxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.particle.EntityFX;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagInt;
 import net.minecraft.world.World;
+import net.torocraft.torohealthmod.configuration.ConfigurationHandler;
 import net.torocraft.torohealthmod.render.DamageParticles;
 
 public class ClientProxy extends CommonProxy {
@@ -26,6 +28,9 @@ public class ClientProxy extends CommonProxy {
     public void displayDamageDealt(EntityLivingBase entity) {
 
         if (!entity.worldObj.isRemote) {
+            return;
+        }
+        if (!ConfigurationHandler.showDamageParticles) {
             return;
         }
 
@@ -51,7 +56,7 @@ public class ClientProxy extends CommonProxy {
         double motionX = world.rand.nextGaussian() * 0.02;
         double motionY = 0.5f;
         double motionZ = world.rand.nextGaussian() * 0.02;
-        DamageParticles damageIndicator = new DamageParticles(damage, world, entity.posX, entity.posY + entity.height, entity.posZ, motionX, motionY, motionZ);
+        EntityFX damageIndicator = new DamageParticles(damage, world, entity.posX, entity.posY + entity.height, entity.posZ, motionX, motionY, motionZ);
         Minecraft.getMinecraft().effectRenderer.addEffect(damageIndicator);
     }
 

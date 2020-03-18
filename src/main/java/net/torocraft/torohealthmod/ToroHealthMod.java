@@ -9,12 +9,13 @@ import net.minecraftforge.common.MinecraftForge;
 import net.torocraft.torohealthmod.events.Events;
 import net.torocraft.torohealthmod.proxy.CommonProxy;
 
-@Mod(modid = ToroHealthMod.MODID, name = ToroHealthMod.MODNAME, version = ToroHealthMod.VERSION)
+@Mod(modid = ToroHealthMod.MODID, name = ToroHealthMod.MODNAME, version = ToroHealthMod.VERSION, guiFactory = ToroHealthMod.GUI_FACTORY_CLASS)
 public class ToroHealthMod {
 
 	public static final String MODID = "torohealthmod";
 	public static final String VERSION = "1.7.10-1.0.1";
 	public static final String MODNAME = "ToroHealthMod";
+	public static final String GUI_FACTORY_CLASS = "net.torocraft.torohealthmod.configuration.gui.GuiFactory";
 
 	@SidedProxy(clientSide = "net.torocraft.torohealthmod.proxy.ClientProxy", serverSide = "net.torocraft.torohealthmod.proxy.CommonProxy")
 	public static CommonProxy proxy;
