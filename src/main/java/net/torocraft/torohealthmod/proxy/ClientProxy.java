@@ -4,7 +4,6 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.EntityFX;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagInt;
 import net.minecraft.world.World;
@@ -27,12 +26,10 @@ public class ClientProxy extends CommonProxy {
     @Override
     public void displayDamageDealt(EntityLivingBase entity) {
 
-        if (!entity.worldObj.isRemote) {
+        if (!entity.worldObj.isRemote)
             return;
-        }
-        if (!ConfigurationHandler.showDamageParticles) {
+        if (!ConfigurationHandler.showDamageParticles)
             return;
-        }
 
         int currentHealth = (int) Math.ceil(entity.getHealth());
 
@@ -47,10 +44,12 @@ public class ClientProxy extends CommonProxy {
         entity.getEntityData().setTag("health", new NBTTagInt(currentHealth));
     }
 
-    private void displayParticle(Entity entity, int damage) {
-        if (damage == 0) {
+    private void displayParticle(EntityLivingBase entity, int damage) {
+
+        if (damage == 0)
             return;
-        }
+        if (!entity.canEntityBeSeen(Minecraft.getMinecraft().thePlayer))
+            return;
 
         World world = entity.worldObj;
         double motionX = world.rand.nextGaussian() * 0.02;

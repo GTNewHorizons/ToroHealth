@@ -29,7 +29,7 @@ public class DamageParticles extends EntityFX {
 		particleTextureJitterX = 0.0F;
 		particleTextureJitterY = 0.0F;
 		particleGravity = GRAVITY;
-		particleScale = ConfigurationHandler.size;
+		particleScale = (float) ConfigurationHandler.size;
 		particleMaxAge = LIFESPAN;
 		this.damage = damage;
 		this.text = Integer.toString(Math.abs(damage));
