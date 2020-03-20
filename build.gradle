@@ -17,7 +17,7 @@ buildscript {
 
 apply plugin: 'forge'
 
-version = "1.7.10-1.0.0-beta2"
+version = "1.7.10-1.0.0-beta3"
 group= "net.torocraft.torohealth" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "torohealth"
 
