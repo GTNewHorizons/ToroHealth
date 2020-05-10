@@ -48,7 +48,7 @@ public class ClientProxy extends CommonProxy {
 
         if (damage == 0)
             return;
-        if (!entity.canEntityBeSeen(Minecraft.getMinecraft().thePlayer))
+        if (!entity.canEntityBeSeen(Minecraft.getMinecraft().thePlayer) && !ConfigurationHandler.showAlways)
             return;
 
         World world = entity.worldObj;

@@ -18,11 +18,11 @@ public class DamageParticles extends EntityFX {
 	protected static final float GRAVITY = 0.1F;
 	protected static final int LIFESPAN = 12;
 
-	protected String text;
-	protected boolean shouldOnTop = true;
+	protected final String text;
+	protected final boolean shouldOnTop = true;
 	protected boolean grow = true;
-	protected float scale = 1.0F;
-	private int damage;
+	protected final float scale = 1.0F;
+	private final int damage;
 
 	public DamageParticles(int damage, World world, double parX, double parY, double parZ, double parMotionX, double parMotionY, double parMotionZ) {
 		super(world, parX, parY, parZ, parMotionX, parMotionY, parMotionZ);

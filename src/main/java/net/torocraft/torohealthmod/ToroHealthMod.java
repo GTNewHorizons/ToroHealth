@@ -13,7 +13,7 @@ import net.torocraft.torohealthmod.proxy.CommonProxy;
 public class ToroHealthMod {
 
 	public static final String MODID = "torohealthmod";
-	public static final String VERSION = "1.7.10-1.0.0-beta3";
+	public static final String VERSION = "${version}";
 	public static final String MODNAME = "ToroHealthMod";
 	public static final String GUI_FACTORY_CLASS = "net.torocraft.torohealthmod.configuration.gui.GuiFactory";
 
