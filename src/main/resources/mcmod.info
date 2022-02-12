@@ -1,5 +1,5 @@
 [{
-  "modid": "${modIs}",
+  "modid": "${modId}",
   "name": "${modName}",
   "description": "Displays damage indicators and health bars for all entities.",
   "version": "${modVersion}",
