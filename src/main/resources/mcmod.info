@@ -1,10 +1,9 @@
-[
-{
-  "modid": "torohealthmod",
-  "name": "ToroHealth Damage Indicators",
+[{
+  "modid": "${modIs}",
+  "name": "${modName}",
   "description": "Displays damage indicators and health bars for all entities.",
-  "version": "${version}",
-  "mcversion": "${mcversion}",
+  "version": "${modVersion}",
+  "mcversion": "${minecraftVersion}",
   "url": "http://torocraft.net/",
   "updateUrl": "",
   "authorList": ["torocraft"],
@@ -12,5 +11,4 @@
   "logoFile": "",
   "screenshots": [],
   "dependencies": []
-}
-]
+}]
