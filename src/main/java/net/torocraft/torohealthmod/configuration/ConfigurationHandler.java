@@ -10,18 +10,17 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
 public class ConfigurationHandler {
 
-    public static Configuration config;
+    private static Configuration config;
     public static boolean showDamageParticles = true;
     public static boolean showAlways = false;
-    public static Integer damageColor;
-    public static Integer healColor;
+    public static int damageColor;
+    public static int healColor;
     public static double size = 3.0;
     private static final String[] acceptedColors = new String[] { "RED", "GREEN", "BLUE", "YELLOW", "ORANGE", "WHITE",
             "BLACK", "PURPLE" };
 
-    public static void init(String configDir) {
+    public ConfigurationHandler(File path) {
         if (config == null) {
-            File path = new File(configDir + "/" + ToroHealthMod.MODID + ".cfg");
             config = new Configuration(path);
             loadConfiguration();
         }
@@ -65,22 +64,23 @@ public class ConfigurationHandler {
     }
 
     private static int mapColor(String color) {
-        if (color.equals("RED")) {
-            return 0xff0000;
-        } else if (color.equals("GREEN")) {
-            return 0x00ff00;
-        } else if (color.equals("BLUE")) {
-            return 0x0000ff;
-        } else if (color.equals("YELLOW")) {
-            return 0xffff00;
-        } else if (color.equals("ORANGE")) {
-            return 0xffa500;
-        } else if (color.equals("BLACK")) {
-            return 0x000000;
-        } else if (color.equals("PURPLE")) {
-            return 0x960096;
-        } else {
-            return 0xffffff;
+        switch (color) {
+            case "RED":
+                return 0xFF0000;
+            case "GREEN":
+                return 0x00FF00;
+            case "BLUE":
+                return 0x0000FF;
+            case "YELLOW":
+                return 0xFFFF00;
+            case "ORANGE":
+                return 0xFFA500;
+            case "BLACK":
+                return 0x000000;
+            case "PURPLE":
+                return 0x960096;
+            default:
+                return 0xFFFFFF;
         }
     }
 }
