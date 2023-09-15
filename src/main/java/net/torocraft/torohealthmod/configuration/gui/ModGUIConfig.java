@@ -14,7 +14,7 @@ public class ModGUIConfig extends GuiConfig {
     public ModGUIConfig(GuiScreen guiScreen) {
         super(
                 guiScreen,
-                new ConfigElement(getConfig().getCategory(Configuration.CATEGORY_GENERAL)).getChildElements(),
+                new ConfigElement<>(getConfig().getCategory(Configuration.CATEGORY_GENERAL)).getChildElements(),
                 ToroHealthMod.MODID,
                 false,
                 false,

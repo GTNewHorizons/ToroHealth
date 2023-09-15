@@ -1,4 +1,4 @@
-package net.torocraft.torohealthmod.render;
+package net.torocraft.torohealthmod.particle;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
