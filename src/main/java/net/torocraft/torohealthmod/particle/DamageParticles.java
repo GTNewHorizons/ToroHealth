@@ -5,6 +5,7 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.particle.EntityFX;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.torocraft.torohealthmod.configuration.ConfigurationHandler;
@@ -26,7 +27,7 @@ public class DamageParticles extends EntityFX {
     protected final float scale = 1.0F;
     private final int damage;
 
-    public DamageParticles(int damage, World world, double parX, double parY, double parZ, double parMotionX,
+    private DamageParticles(int damage, World world, double parX, double parY, double parZ, double parMotionX,
             double parMotionY, double parMotionZ) {
         super(world, parX, parY, parZ, parMotionX, parMotionY, parMotionZ);
         particleTextureJitterX = 0.0F;
@@ -38,8 +39,22 @@ public class DamageParticles extends EntityFX {
         this.text = Integer.toString(Math.abs(damage));
     }
 
-    protected DamageParticles(World worldIn, double posXIn, double posYIn, double posZIn) {
-        this(0, worldIn, posXIn, posYIn, posZIn, 0, 0, 0);
+    public static void spawnDamageParticle(EntityLivingBase entity, int damage) {
+        if (damage == 0) return;
+        if (!ConfigurationHandler.showAlways && !entity.canEntityBeSeen(Minecraft.getMinecraft().thePlayer)) return;
+        final double motionX = entity.worldObj.rand.nextGaussian() * 0.02;
+        final double motionY = 0.5f;
+        final double motionZ = entity.worldObj.rand.nextGaussian() * 0.02;
+        final EntityFX damageIndicator = new DamageParticles(
+                damage,
+                entity.worldObj,
+                entity.posX,
+                entity.posY + entity.height,
+                entity.posZ,
+                motionX,
+                motionY,
+                motionZ);
+        Minecraft.getMinecraft().effectRenderer.addEffect(damageIndicator);
     }
 
     @Override

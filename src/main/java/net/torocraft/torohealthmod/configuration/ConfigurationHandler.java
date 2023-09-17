@@ -2,12 +2,17 @@ package net.torocraft.torohealthmod.configuration;
 
 import java.io.File;
 
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
 import net.torocraft.torohealthmod.ToroHealthMod;
+import net.torocraft.torohealthmod.event.ToroHealthEventHandler;
 
 import cpw.mods.fml.client.event.ConfigChangedEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
+@SideOnly(Side.CLIENT)
 public class ConfigurationHandler {
 
     private static Configuration config;
@@ -18,6 +23,7 @@ public class ConfigurationHandler {
     public static double size = 3.0;
     private static final String[] acceptedColors = new String[] { "RED", "GREEN", "BLUE", "YELLOW", "ORANGE", "WHITE",
             "BLACK", "PURPLE" };
+    private static ToroHealthEventHandler eventHandler;
 
     public ConfigurationHandler(File path) {
         if (config == null) {
@@ -51,12 +57,29 @@ public class ConfigurationHandler {
                         "Damage Text Color",
                         acceptedColors));
 
-        if (config.hasChanged()) config.save();
+        if (showDamageParticles) {
+            if (eventHandler == null) {
+                eventHandler = new ToroHealthEventHandler();
+                MinecraftForge.EVENT_BUS.register(eventHandler);
+            }
+        } else {
+            if (eventHandler != null) {
+                MinecraftForge.EVENT_BUS.unregister(eventHandler);
+                eventHandler = null;
+            }
+        }
+
+        if (config.hasChanged()) {
+            config.save();
+        }
+
     }
 
     @SubscribeEvent
     public void onConfigurationChangeEvent(ConfigChangedEvent.OnConfigChangedEvent event) {
-        if (event.modID.equalsIgnoreCase(ToroHealthMod.MODID)) loadConfiguration();
+        if (event.modID.equalsIgnoreCase(ToroHealthMod.MODID)) {
+            loadConfiguration();
+        }
     }
 
     public static Configuration getConfig() {
