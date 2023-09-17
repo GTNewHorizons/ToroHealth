@@ -1,12 +1,14 @@
 package net.torocraft.torohealthmod.particle;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.particle.EntityFX;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.MathHelper;
+import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.torocraft.torohealthmod.configuration.ConfigurationHandler;
 
@@ -18,13 +20,15 @@ import cpw.mods.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class DamageParticles extends EntityFX {
 
-    protected static final float GRAVITY = 0.1F;
-    protected static final int LIFESPAN = 12;
+    private static final float GRAVITY = 0.1F;
+    private static final int LIFESPAN = 12;
 
-    protected final String text;
-    protected final boolean shouldOnTop = true;
-    protected boolean grow = true;
-    protected final float scale = 1.0F;
+    private static final Minecraft mc = Minecraft.getMinecraft();
+
+    private final String text;
+    private final boolean shouldOnTop = true;
+    private boolean grow = true;
+    private final float scale = 1.0F;
     private final int damage;
 
     private DamageParticles(int damage, World world, double parX, double parY, double parZ, double parMotionX,
@@ -40,12 +44,11 @@ public class DamageParticles extends EntityFX {
     }
 
     public static void spawnDamageParticle(EntityLivingBase entity, int damage) {
-        if (damage == 0) return;
-        if (!ConfigurationHandler.showAlways && !entity.canEntityBeSeen(Minecraft.getMinecraft().thePlayer)) return;
+        if (!ConfigurationHandler.showAlways && !canEntityBeSeen(entity)) return;
         final double motionX = entity.worldObj.rand.nextGaussian() * 0.02;
         final double motionY = 0.5f;
         final double motionZ = entity.worldObj.rand.nextGaussian() * 0.02;
-        final EntityFX damageIndicator = new DamageParticles(
+        final DamageParticles damageIndicator = new DamageParticles(
                 damage,
                 entity.worldObj,
                 entity.posX,
@@ -54,14 +57,38 @@ public class DamageParticles extends EntityFX {
                 motionX,
                 motionY,
                 motionZ);
-        Minecraft.getMinecraft().effectRenderer.addEffect(damageIndicator);
+        mc.effectRenderer.addEffect(damageIndicator);
+    }
+
+    private static boolean canEntityBeSeen(EntityLivingBase entity) {
+        final EntityClientPlayerMP player = mc.thePlayer;
+        final double distSq = player.getDistanceSqToEntity(entity);
+        if (distSq > 64D * 64D) {
+            // the entity is too far
+            return false;
+        }
+        final Vec3 playerEyePos = Vec3
+                .createVectorHelper(player.posX, player.posY + (double) player.getEyeHeight(), player.posZ);
+        final Vec3 entityEyePos = Vec3
+                .createVectorHelper(entity.posX, entity.posY + (double) entity.getEyeHeight(), entity.posZ);
+        if (distSq > 25D) {
+            final Vec3 playerLook = player.getLookVec();
+            final Vec3 playerToEntity = playerEyePos.subtract(entityEyePos);
+            if ((mc.gameSettings.thirdPersonView == 2 ? -1D : 1D) * playerLook.dotProduct(playerToEntity) < 0D) {
+                // the entity is behind
+                return false;
+            }
+        }
+        // rayTraceBlocks(Vec3 vec31, Vec3 vec32, boolean stopOnLiquid, boolean ignoreBlockWithoutBoundingBox, boolean
+        // returnLastUncollidableBlock)
+        return player.worldObj.func_147447_a(playerEyePos, entityEyePos, false, true, false) == null;
     }
 
     @Override
     public void renderParticle(Tessellator p_70539_1_, float p_70539_2_, float p_70539_3_, float p_70539_4_,
             float p_70539_5_, float p_70539_6_, float p_70539_7_) {
-        float rotationYaw = (-Minecraft.getMinecraft().thePlayer.rotationYaw);
-        float rotationPitch = Minecraft.getMinecraft().thePlayer.rotationPitch;
+        float rotationYaw = (-mc.thePlayer.rotationYaw);
+        float rotationPitch = mc.thePlayer.rotationPitch;
 
         float f11 = (float) (this.prevPosX + (this.posX - this.prevPosX) * (double) p_70539_2_ - interpPosX);
         float f12 = (float) (this.prevPosY + (this.posY - this.prevPosY) * (double) p_70539_2_ - interpPosY);
@@ -99,7 +126,7 @@ public class DamageParticles extends EntityFX {
             color = ConfigurationHandler.healColor;
         }
 
-        final FontRenderer fontRenderer = Minecraft.getMinecraft().fontRenderer;
+        final FontRenderer fontRenderer = mc.fontRenderer;
         fontRenderer.drawStringWithShadow(
                 this.text,
                 -MathHelper.floor_float(fontRenderer.getStringWidth(this.text) / 2.0F) + 1,
