@@ -26,19 +26,17 @@ public class DamageParticles extends EntityFX {
     private static final Minecraft mc = Minecraft.getMinecraft();
 
     private final String text;
-    private final boolean shouldOnTop = true;
     private boolean grow = true;
-    private final float scale = 1.0F;
     private final int damage;
 
     private DamageParticles(int damage, World world, double parX, double parY, double parZ, double parMotionX,
             double parMotionY, double parMotionZ) {
         super(world, parX, parY, parZ, parMotionX, parMotionY, parMotionZ);
-        particleTextureJitterX = 0.0F;
-        particleTextureJitterY = 0.0F;
-        particleGravity = GRAVITY;
-        particleScale = (float) ConfigurationHandler.size;
-        particleMaxAge = LIFESPAN;
+        this.particleTextureJitterX = 0.0F;
+        this.particleTextureJitterY = 0.0F;
+        this.particleGravity = GRAVITY;
+        this.particleScale = (float) ConfigurationHandler.size;
+        this.particleMaxAge = LIFESPAN;
         this.damage = damage;
         this.text = Integer.toString(Math.abs(damage));
     }
@@ -85,28 +83,24 @@ public class DamageParticles extends EntityFX {
     }
 
     @Override
-    public void renderParticle(Tessellator p_70539_1_, float p_70539_2_, float p_70539_3_, float p_70539_4_,
-            float p_70539_5_, float p_70539_6_, float p_70539_7_) {
+    public void renderParticle(Tessellator p_70539_1_, float partialTicks, float rotationX, float rotationZ,
+            float rotationYZ, float rotationXY, float rotationXZ) {
         float rotationYaw = (-mc.thePlayer.rotationYaw);
         float rotationPitch = mc.thePlayer.rotationPitch;
-
-        float f11 = (float) (this.prevPosX + (this.posX - this.prevPosX) * (double) p_70539_2_ - interpPosX);
-        float f12 = (float) (this.prevPosY + (this.posY - this.prevPosY) * (double) p_70539_2_ - interpPosY);
-        float f13 = (float) (this.prevPosZ + (this.posZ - this.prevPosZ) * (double) p_70539_2_ - interpPosZ);
+        float f11 = (float) (this.prevPosX + (this.posX - this.prevPosX) * (double) partialTicks - interpPosX);
+        float f12 = (float) (this.prevPosY + (this.posY - this.prevPosY) * (double) partialTicks - interpPosY);
+        float f13 = (float) (this.prevPosZ + (this.posZ - this.prevPosZ) * (double) partialTicks - interpPosZ);
 
         GL11.glPushMatrix();
-        if (this.shouldOnTop) {
-            GL11.glDepthFunc(519);
-        } else {
-            GL11.glDepthFunc(515);
-        }
+        GL11.glDepthFunc(519);
         GL11.glTranslatef(f11, f12, f13);
         GL11.glRotatef(rotationYaw, 0.0F, 1.0F, 0.0F);
         GL11.glRotatef(rotationPitch, 1.0F, 0.0F, 0.0F);
 
         GL11.glScalef(-1.0F, -1.0F, 1.0F);
         GL11.glScaled(this.particleScale * 0.008D, this.particleScale * 0.008D, this.particleScale * 0.008D);
-        GL11.glScaled(this.scale, this.scale, this.scale);
+        float scale = 1.0F;
+        GL11.glScaled(scale, scale, scale);
 
         OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240.0F, 0.003662109F);
         GL11.glEnable(3553);
@@ -135,15 +129,19 @@ public class DamageParticles extends EntityFX {
 
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         GL11.glDepthFunc(515);
-
         GL11.glPopMatrix();
+    }
+
+    @Override
+    public void onUpdate() {
+        super.onUpdate();
         if (this.grow) {
-            this.particleScale *= 1.08F;
+            this.particleScale *= 1.1664F;
             if (this.particleScale > ConfigurationHandler.size * 3.0D) {
                 this.grow = false;
             }
         } else {
-            this.particleScale *= 0.96F;
+            this.particleScale *= 0.8573F;
         }
     }
 
