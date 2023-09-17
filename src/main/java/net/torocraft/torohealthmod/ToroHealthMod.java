@@ -1,21 +1,13 @@
 package net.torocraft.torohealthmod;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.particle.EntityFX;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.nbt.NBTTagInt;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.entity.living.LivingEvent;
+import java.util.logging.Logger;
+
 import net.torocraft.torohealthmod.configuration.ConfigurationHandler;
-import net.torocraft.torohealthmod.particle.DamageParticles;
 
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
-import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 @Mod(
         modid = ToroHealthMod.MODID,
@@ -33,49 +25,10 @@ public class ToroHealthMod {
     public void preInit(FMLPreInitializationEvent event) {
         if (event.getSide() == Side.CLIENT) {
             FMLCommonHandler.instance().bus().register(new ConfigurationHandler(event.getSuggestedConfigurationFile()));
+        } else if (event.getSide() == Side.SERVER) {
+            Logger.getLogger(MODNAME).info(
+                    MODNAME + " has been installed on a server, this is a client mod, it serves no purpose on a server and can be safely removed");
         }
-    }
-
-    @Mod.EventHandler
-    public void postInit(FMLPostInitializationEvent event) {
-        if (event.getSide() == Side.CLIENT) {
-            MinecraftForge.EVENT_BUS.register(this);
-        }
-    }
-
-    @SideOnly(Side.CLIENT)
-    @SubscribeEvent
-    public void onLivingUpdate(LivingEvent.LivingUpdateEvent event) {
-        if (!ConfigurationHandler.showDamageParticles) return;
-        final EntityLivingBase entity = event.entityLiving;
-        if (!entity.worldObj.isRemote) return;
-        final int currentHealth = (int) Math.ceil(entity.getHealth());
-        if (entity.getEntityData().hasKey("health")) {
-            final int entityHealth = ((NBTTagInt) entity.getEntityData().getTag("health")).func_150287_d();
-            if (entityHealth != currentHealth) {
-                displayParticle(entity, entityHealth - currentHealth);
-            }
-        }
-        entity.getEntityData().setTag("health", new NBTTagInt(currentHealth));
-    }
-
-    @SideOnly(Side.CLIENT)
-    private void displayParticle(EntityLivingBase entity, int damage) {
-        if (damage == 0) return;
-        if (!ConfigurationHandler.showAlways && !entity.canEntityBeSeen(Minecraft.getMinecraft().thePlayer)) return;
-        final double motionX = entity.worldObj.rand.nextGaussian() * 0.02;
-        final double motionY = 0.5f;
-        final double motionZ = entity.worldObj.rand.nextGaussian() * 0.02;
-        final EntityFX damageIndicator = new DamageParticles(
-                damage,
-                entity.worldObj,
-                entity.posX,
-                entity.posY + entity.height,
-                entity.posZ,
-                motionX,
-                motionY,
-                motionZ);
-        Minecraft.getMinecraft().effectRenderer.addEffect(damageIndicator);
     }
 
 }
