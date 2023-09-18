@@ -1,4 +1,4 @@
-package net.torocraft.torohealthmod.configuration.gui;
+package net.torocraft.torohealthmod.client.configuration.gui;
 
 import java.util.Set;
 
