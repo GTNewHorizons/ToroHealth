@@ -42,7 +42,7 @@ public class DamageParticles extends EntityFX {
     }
 
     public static void spawnDamageParticle(EntityLivingBase entity, int damage) {
-        if (!ConfigurationHandler.showAlways && !canEntityBeSeen(entity)) return;
+        if (isEntityNotVisible(entity)) return;
         final double motionX = entity.worldObj.rand.nextGaussian() * 0.02;
         final double motionY = 0.5f;
         final double motionZ = entity.worldObj.rand.nextGaussian() * 0.02;
@@ -58,12 +58,15 @@ public class DamageParticles extends EntityFX {
         mc.effectRenderer.addEffect(damageIndicator);
     }
 
-    private static boolean canEntityBeSeen(EntityLivingBase entity) {
+    private static boolean isEntityNotVisible(EntityLivingBase entity) {
         final EntityClientPlayerMP player = mc.thePlayer;
+        if (entity.isInvisibleToPlayer(player)) {
+            return true;
+        }
         final double distSq = player.getDistanceSqToEntity(entity);
         if (distSq > 64D * 64D) {
             // the entity is too far
-            return false;
+            return true;
         }
         final Vec3 playerEyePos = Vec3
                 .createVectorHelper(player.posX, player.posY + (double) player.getEyeHeight(), player.posZ);
@@ -74,12 +77,13 @@ public class DamageParticles extends EntityFX {
             final Vec3 playerToEntity = playerEyePos.subtract(entityEyePos);
             if ((mc.gameSettings.thirdPersonView == 2 ? -1D : 1D) * playerLook.dotProduct(playerToEntity) < 0D) {
                 // the entity is behind
-                return false;
+                return true;
             }
         }
-        // rayTraceBlocks(Vec3 vec31, Vec3 vec32, boolean stopOnLiquid, boolean ignoreBlockWithoutBoundingBox, boolean
+        return !ConfigurationHandler.showThroughWalls
+                && player.worldObj.func_147447_a(playerEyePos, entityEyePos, false, true, true) != null;
+        // rayTraceBlocks(Vec3 from, Vec3 to, boolean stopOnLiquid, boolean ignoreBlockWithoutBoundingBox, boolean
         // returnLastUncollidableBlock)
-        return player.worldObj.func_147447_a(playerEyePos, entityEyePos, false, true, false) == null;
     }
 
     @Override
