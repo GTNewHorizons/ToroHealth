@@ -6,6 +6,7 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.particle.EntityFX;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
@@ -27,7 +28,7 @@ public class DamageParticles extends EntityFX {
 
     private final String text;
     private boolean grow = true;
-    private final int damage;
+    private final int color;
 
     private DamageParticles(int damage, World world, double parX, double parY, double parZ, double parMotionX,
             double parMotionY, double parMotionZ) {
@@ -37,7 +38,7 @@ public class DamageParticles extends EntityFX {
         this.particleGravity = GRAVITY;
         this.particleScale = (float) ConfigurationHandler.size;
         this.particleMaxAge = LIFESPAN;
-        this.damage = damage;
+        this.color = damage < 0 ? ConfigurationHandler.healColor : ConfigurationHandler.damageColor;
         this.text = Integer.toString(Math.abs(damage));
     }
 
@@ -89,23 +90,18 @@ public class DamageParticles extends EntityFX {
     @Override
     public void renderParticle(Tessellator p_70539_1_, float partialTicks, float rotationX, float rotationZ,
             float rotationYZ, float rotationXY, float rotationXZ) {
-        float rotationYaw = (-mc.thePlayer.rotationYaw);
-        float rotationPitch = mc.thePlayer.rotationPitch;
-        float f11 = (float) (this.prevPosX + (this.posX - this.prevPosX) * (double) partialTicks - interpPosX);
-        float f12 = (float) (this.prevPosY + (this.posY - this.prevPosY) * (double) partialTicks - interpPosY);
-        float f13 = (float) (this.prevPosZ + (this.posZ - this.prevPosZ) * (double) partialTicks - interpPosZ);
-
+        float relativeX = (float) (this.prevPosX + (this.posX - this.prevPosX) * (double) partialTicks - interpPosX);
+        float relativeY = (float) (this.prevPosY + (this.posY - this.prevPosY) * (double) partialTicks - interpPosY);
+        float relativeZ = (float) (this.prevPosZ + (this.posZ - this.prevPosZ) * (double) partialTicks - interpPosZ);
+        final float viewerYaw = -RenderManager.instance.livingPlayer.rotationYaw
+                + (mc.gameSettings.thirdPersonView == 2 ? 180F : 0F);
+        final float viewerPitch = RenderManager.instance.livingPlayer.rotationPitch;
         GL11.glPushMatrix();
         GL11.glDepthFunc(519);
-        GL11.glTranslatef(f11, f12, f13);
-        GL11.glRotatef(rotationYaw, 0.0F, 1.0F, 0.0F);
-        GL11.glRotatef(rotationPitch, 1.0F, 0.0F, 0.0F);
-
-        GL11.glScalef(-1.0F, -1.0F, 1.0F);
-        GL11.glScaled(this.particleScale * 0.008D, this.particleScale * 0.008D, this.particleScale * 0.008D);
-        float scale = 1.0F;
-        GL11.glScaled(scale, scale, scale);
-
+        GL11.glTranslatef(relativeX, relativeY, relativeZ);
+        GL11.glRotatef(viewerYaw, 0.0F, 1.0F, 0.0F);
+        GL11.glRotatef(viewerPitch, 1.0F, 0.0F, 0.0F);
+        GL11.glScaled(-this.particleScale * 0.008D, -this.particleScale * 0.008D, this.particleScale * 0.008D);
         OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240.0F, 0.003662109F);
         GL11.glEnable(3553);
         GL11.glDisable(3042);
@@ -118,19 +114,12 @@ public class DamageParticles extends EntityFX {
         GL11.glEnable(3042);
         GL11.glEnable(3008);
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-
-        int color = ConfigurationHandler.damageColor;
-        if (damage < 0) {
-            color = ConfigurationHandler.healColor;
-        }
-
-        final FontRenderer fontRenderer = mc.fontRenderer;
-        fontRenderer.drawStringWithShadow(
+        final FontRenderer fr = mc.fontRenderer;
+        fr.drawStringWithShadow(
                 this.text,
-                -MathHelper.floor_float(fontRenderer.getStringWidth(this.text) / 2.0F) + 1,
-                -MathHelper.floor_float(fontRenderer.FONT_HEIGHT / 2.0F) + 1,
-                color);
-
+                -MathHelper.floor_float(fr.getStringWidth(this.text) / 2.0F) + 1,
+                -MathHelper.floor_float(fr.FONT_HEIGHT / 2.0F) + 1,
+                this.color);
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         GL11.glDepthFunc(515);
         GL11.glPopMatrix();
