@@ -8,7 +8,6 @@ import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.torocraft.torohealthmod.client.configuration.ConfigurationHandler;
@@ -27,8 +26,8 @@ public class DamageParticles extends EntityFX {
     private static final Minecraft mc = Minecraft.getMinecraft();
 
     private final String text;
-    private boolean grow = true;
     private final int color;
+    private boolean grow = true;
 
     private DamageParticles(int damage, World world, double parX, double parY, double parZ, double parMotionX,
             double parMotionY, double parMotionZ) {
@@ -38,8 +37,8 @@ public class DamageParticles extends EntityFX {
         this.particleGravity = GRAVITY;
         this.particleScale = (float) ConfigurationHandler.size;
         this.particleMaxAge = LIFESPAN;
-        this.color = damage < 0 ? ConfigurationHandler.healColor : ConfigurationHandler.damageColor;
         this.text = Integer.toString(Math.abs(damage));
+        this.color = damage < 0 ? ConfigurationHandler.healColor : ConfigurationHandler.damageColor;
     }
 
     public static void spawnDamageParticle(EntityLivingBase entity, int damage) {
@@ -88,40 +87,33 @@ public class DamageParticles extends EntityFX {
     }
 
     @Override
-    public void renderParticle(Tessellator p_70539_1_, float partialTicks, float rotationX, float rotationZ,
+    public void renderParticle(Tessellator tessellator, float partialTicks, float rotationX, float rotationZ,
             float rotationYZ, float rotationXY, float rotationXZ) {
         float relativeX = (float) (this.prevPosX + (this.posX - this.prevPosX) * (double) partialTicks - interpPosX);
         float relativeY = (float) (this.prevPosY + (this.posY - this.prevPosY) * (double) partialTicks - interpPosY);
         float relativeZ = (float) (this.prevPosZ + (this.posZ - this.prevPosZ) * (double) partialTicks - interpPosZ);
-        final float viewerYaw = -RenderManager.instance.livingPlayer.rotationYaw
-                + (mc.gameSettings.thirdPersonView == 2 ? 180F : 0F);
-        final float viewerPitch = RenderManager.instance.livingPlayer.rotationPitch;
-        GL11.glPushMatrix();
-        GL11.glDepthFunc(519);
-        GL11.glTranslatef(relativeX, relativeY, relativeZ);
-        GL11.glRotatef(viewerYaw, 0.0F, 1.0F, 0.0F);
-        GL11.glRotatef(viewerPitch, 1.0F, 0.0F, 0.0F);
-        GL11.glScaled(-this.particleScale * 0.008D, -this.particleScale * 0.008D, this.particleScale * 0.008D);
-        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240.0F, 0.003662109F);
-        GL11.glEnable(3553);
-        GL11.glDisable(3042);
-        GL11.glDepthMask(true);
-        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-        GL11.glEnable(3553);
-        GL11.glEnable(2929);
-        GL11.glDisable(2896);
-        GL11.glBlendFunc(770, 771);
-        GL11.glEnable(3042);
-        GL11.glEnable(3008);
-        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+        final float playerViewY = RenderManager.instance.playerViewY;
+        final float playerViewX = RenderManager.instance.playerViewX * mc.gameSettings.thirdPersonView == 2 ? -1 : 1;
         final FontRenderer fr = mc.fontRenderer;
-        fr.drawStringWithShadow(
-                this.text,
-                -MathHelper.floor_float(fr.getStringWidth(this.text) / 2.0F) + 1,
-                -MathHelper.floor_float(fr.FONT_HEIGHT / 2.0F) + 1,
-                this.color);
+        GL11.glPushMatrix();
+        GL11.glTranslatef(relativeX, relativeY, relativeZ);
+        GL11.glNormal3f(0.0F, 1.0F, 0.0F);
+        GL11.glRotatef(-playerViewY, 0.0F, 1.0F, 0.0F);
+        GL11.glRotatef(playerViewX, 1.0F, 0.0F, 0.0F);
+        final double f1 = this.particleScale * 0.008D;
+        GL11.glScaled(-f1, -f1, f1);
+        GL11.glDisable(GL11.GL_LIGHTING);
+        GL11.glEnable(GL11.GL_BLEND);
+        OpenGlHelper.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, 1, 0);
+        final int j = fr.getStringWidth(this.text) / 2;
+        GL11.glDepthMask(false);
+        GL11.glDisable(GL11.GL_DEPTH_TEST);
+        fr.drawStringWithShadow(this.text, -j, 0, this.color);
+        GL11.glEnable(GL11.GL_DEPTH_TEST);
+        GL11.glDepthMask(true);
+        GL11.glEnable(GL11.GL_LIGHTING);
+        GL11.glDisable(GL11.GL_BLEND);
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-        GL11.glDepthFunc(515);
         GL11.glPopMatrix();
     }
 
