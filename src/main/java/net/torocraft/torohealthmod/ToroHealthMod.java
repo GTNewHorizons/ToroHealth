@@ -2,7 +2,7 @@ package net.torocraft.torohealthmod;
 
 import java.util.logging.Logger;
 
-import net.torocraft.torohealthmod.configuration.ConfigurationHandler;
+import net.torocraft.torohealthmod.client.configuration.ConfigurationHandler;
 
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
@@ -19,7 +19,7 @@ public class ToroHealthMod {
     public static final String MODID = "GRADLETOKEN_MODID";
     public static final String VERSION = "GRADLETOKEN_VERSION";
     public static final String MODNAME = "ToroHealthMod";
-    public static final String GUI_FACTORY_CLASS = "net.torocraft.torohealthmod.configuration.gui.GuiFactory";
+    public static final String GUI_FACTORY_CLASS = "net.torocraft.torohealthmod.client.configuration.gui.GuiFactory";
 
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {

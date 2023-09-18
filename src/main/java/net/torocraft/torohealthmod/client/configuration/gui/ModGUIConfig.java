@@ -1,6 +1,6 @@
-package net.torocraft.torohealthmod.configuration.gui;
+package net.torocraft.torohealthmod.client.configuration.gui;
 
-import static net.torocraft.torohealthmod.configuration.ConfigurationHandler.getConfig;
+import static net.torocraft.torohealthmod.client.configuration.ConfigurationHandler.getConfig;
 
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraftforge.common.config.ConfigElement;

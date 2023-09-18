@@ -1,11 +1,11 @@
-package net.torocraft.torohealthmod.configuration;
+package net.torocraft.torohealthmod.client.configuration;
 
 import java.io.File;
 
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
 import net.torocraft.torohealthmod.ToroHealthMod;
-import net.torocraft.torohealthmod.event.ToroHealthEventHandler;
+import net.torocraft.torohealthmod.client.event.ToroHealthEventHandler;
 
 import cpw.mods.fml.client.event.ConfigChangedEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -35,9 +35,9 @@ public class ConfigurationHandler {
     private static void loadConfiguration() {
         // spotless:off
         showDamageParticles = config.getBoolean("Show Damage Particles", Configuration.CATEGORY_GENERAL, true, "Show Damage Indicators");
-        showThroughWalls = config.getBoolean("Render through walls", Configuration.CATEGORY_GENERAL, false, "Render particles though walls");
-        size = config.get(Configuration.CATEGORY_GENERAL, "Particles Size", size, "Particles Size [default: 3.0]").getDouble();
-        healColor = mapColor(config.getString("Heal Color", Configuration.CATEGORY_GENERAL, "GREEN", "Heal Text Color", acceptedColors));
+        showThroughWalls =    config.getBoolean("Render through walls", Configuration.CATEGORY_GENERAL, false, "Render particles though walls");
+        size =                config.get(Configuration.CATEGORY_GENERAL, "Particles Size", size, "Particles Size [default: 3.0]").getDouble();
+        healColor =   mapColor(config.getString("Heal Color", Configuration.CATEGORY_GENERAL, "GREEN", "Heal Text Color", acceptedColors));
         damageColor = mapColor(config.getString("Damage Color", Configuration.CATEGORY_GENERAL, "RED", "Damage Text Color", acceptedColors));
         // spotless:on
 

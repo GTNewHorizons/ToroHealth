@@ -1,10 +1,10 @@
-package net.torocraft.torohealthmod.event;
+package net.torocraft.torohealthmod.client.event;
 
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.MathHelper;
 import net.minecraftforge.event.entity.living.LivingEvent;
+import net.torocraft.torohealthmod.client.particle.DamageParticles;
 import net.torocraft.torohealthmod.mixin.ducks.EntityLivingBaseDuck;
-import net.torocraft.torohealthmod.particle.DamageParticles;
 
 import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;

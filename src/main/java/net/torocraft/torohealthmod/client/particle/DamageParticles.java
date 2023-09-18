@@ -1,4 +1,4 @@
-package net.torocraft.torohealthmod.particle;
+package net.torocraft.torohealthmod.client.particle;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityClientPlayerMP;
@@ -11,7 +11,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
-import net.torocraft.torohealthmod.configuration.ConfigurationHandler;
+import net.torocraft.torohealthmod.client.configuration.ConfigurationHandler;
 
 import org.lwjgl.opengl.GL11;
 
