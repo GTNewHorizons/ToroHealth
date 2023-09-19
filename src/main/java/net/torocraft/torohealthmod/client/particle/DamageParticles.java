@@ -2,11 +2,9 @@ package net.torocraft.torohealthmod.client.particle;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityClientPlayerMP;
-import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.particle.EntityFX;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
@@ -89,26 +87,35 @@ public class DamageParticles extends EntityFX {
     @Override
     public void renderParticle(Tessellator tessellator, float partialTicks, float rotationX, float rotationZ,
             float rotationYZ, float rotationXY, float rotationXZ) {
-        float relativeX = (float) (this.prevPosX + (this.posX - this.prevPosX) * (double) partialTicks - interpPosX);
-        float relativeY = (float) (this.prevPosY + (this.posY - this.prevPosY) * (double) partialTicks - interpPosY);
-        float relativeZ = (float) (this.prevPosZ + (this.posZ - this.prevPosZ) * (double) partialTicks - interpPosZ);
-        final float playerViewY = RenderManager.instance.playerViewY;
-        final float playerViewX = RenderManager.instance.playerViewX * mc.gameSettings.thirdPersonView == 2 ? -1 : 1;
-        final FontRenderer fr = mc.fontRenderer;
+        final float relativeX;
+        final float relativeY;
+        final float relativeZ;
+        final float rotationYaw;
+        final float rotationPitch;
+        relativeX = (float) (this.prevPosX + (this.posX - this.prevPosX) * (double) partialTicks - interpPosX);
+        relativeY = (float) (this.prevPosY + (this.posY - this.prevPosY) * (double) partialTicks - interpPosY);
+        relativeZ = (float) (this.prevPosZ + (this.posZ - this.prevPosZ) * (double) partialTicks - interpPosZ);
+        if (mc.gameSettings.thirdPersonView != 2) {
+            rotationYaw = Minecraft.getMinecraft().thePlayer.rotationYaw;
+            rotationPitch = Minecraft.getMinecraft().thePlayer.rotationPitch;
+        } else {
+            rotationYaw = Minecraft.getMinecraft().thePlayer.rotationYaw + 180F;
+            rotationPitch = -Minecraft.getMinecraft().thePlayer.rotationPitch;
+        }
         GL11.glPushMatrix();
         GL11.glTranslatef(relativeX, relativeY, relativeZ);
         GL11.glNormal3f(0.0F, 1.0F, 0.0F);
-        GL11.glRotatef(-playerViewY, 0.0F, 1.0F, 0.0F);
-        GL11.glRotatef(playerViewX, 1.0F, 0.0F, 0.0F);
+        GL11.glRotatef(-rotationYaw, 0.0F, 1.0F, 0.0F);
+        GL11.glRotatef(rotationPitch, 1.0F, 0.0F, 0.0F);
         final double f1 = this.particleScale * 0.008D;
         GL11.glScaled(-f1, -f1, f1);
         GL11.glDisable(GL11.GL_LIGHTING);
         GL11.glEnable(GL11.GL_BLEND);
         OpenGlHelper.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, 1, 0);
-        final int j = fr.getStringWidth(this.text) / 2;
+        final int j = mc.fontRenderer.getStringWidth(this.text) / 2;
         GL11.glDepthMask(false);
         GL11.glDisable(GL11.GL_DEPTH_TEST);
-        fr.drawStringWithShadow(this.text, -j, 0, this.color);
+        mc.fontRenderer.drawStringWithShadow(this.text, -j, 0, this.color);
         GL11.glEnable(GL11.GL_DEPTH_TEST);
         GL11.glDepthMask(true);
         GL11.glEnable(GL11.GL_LIGHTING);
