@@ -5,7 +5,7 @@ import static net.torocraft.torohealthmod.client.configuration.ConfigurationHand
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraftforge.common.config.ConfigElement;
 import net.minecraftforge.common.config.Configuration;
-import net.torocraft.torohealthmod.Tags;
+import net.torocraft.torohealthmod.ToroHealthMod;
 
 import cpw.mods.fml.client.config.GuiConfig;
 
@@ -15,7 +15,7 @@ public class ModGUIConfig extends GuiConfig {
         super(
                 guiScreen,
                 new ConfigElement<>(getConfig().getCategory(Configuration.CATEGORY_GENERAL)).getChildElements(),
-                Tags.MODID,
+                ToroHealthMod.MODID,
                 false,
                 false,
                 GuiConfig.getAbridgedConfigPath(getConfig().toString()));
