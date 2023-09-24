@@ -9,9 +9,14 @@ import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.relauncher.Side;
 
-@Mod(modid = Tags.MODID, name = Tags.MODNAME, version = Tags.VERSION, guiFactory = ToroHealthMod.GUI_FACTORY_CLASS)
+@Mod(
+        modid = ToroHealthMod.MODID,
+        name = Tags.MODNAME,
+        version = Tags.VERSION,
+        guiFactory = ToroHealthMod.GUI_FACTORY_CLASS)
 public class ToroHealthMod {
 
+    public static final String MODID = "torohealthmod";
     public static final String GUI_FACTORY_CLASS = "net.torocraft.torohealthmod.client.configuration.gui.GuiFactory";
 
     @Mod.EventHandler

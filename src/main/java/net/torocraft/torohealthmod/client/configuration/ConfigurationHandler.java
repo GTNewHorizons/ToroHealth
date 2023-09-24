@@ -4,7 +4,7 @@ import java.io.File;
 
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
-import net.torocraft.torohealthmod.Tags;
+import net.torocraft.torohealthmod.ToroHealthMod;
 import net.torocraft.torohealthmod.client.event.ToroHealthEventHandler;
 
 import cpw.mods.fml.client.event.ConfigChangedEvent;
@@ -58,7 +58,7 @@ public class ConfigurationHandler {
 
     @SubscribeEvent
     public void onConfigurationChangeEvent(ConfigChangedEvent.OnConfigChangedEvent event) {
-        if (event.modID.equalsIgnoreCase(Tags.MODID)) {
+        if (event.modID.equalsIgnoreCase(ToroHealthMod.MODID)) {
             loadConfiguration();
         }
     }
