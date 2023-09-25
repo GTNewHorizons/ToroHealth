@@ -1,6 +1,6 @@
-package net.torocraft.torohealthmod.mixin.ducks;
+package net.torocraft.torohealthmod.mixins.interfaces;
 
-public interface EntityLivingBaseDuck {
+public interface EntityLivingBaseExt {
 
     int getTorohealth$prevHealth();
 
