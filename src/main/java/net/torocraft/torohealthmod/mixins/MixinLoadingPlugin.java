@@ -1,4 +1,4 @@
-package net.torocraft.torohealthmod.mixin;
+package net.torocraft.torohealthmod.mixins;
 
 import java.util.ArrayList;
 import java.util.List;
