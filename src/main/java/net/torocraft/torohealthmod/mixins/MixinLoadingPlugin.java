@@ -10,6 +10,7 @@ import com.gtnewhorizon.gtnhmixins.IEarlyMixinLoader;
 import cpw.mods.fml.relauncher.FMLLaunchHandler;
 import cpw.mods.fml.relauncher.IFMLLoadingPlugin;
 
+@IFMLLoadingPlugin.MCVersion("1.7.10")
 public class MixinLoadingPlugin implements IEarlyMixinLoader, IFMLLoadingPlugin {
 
     @Override
