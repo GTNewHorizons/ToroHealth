@@ -17,6 +17,11 @@ public class ToroHealthEventHandler {
         if (!entity.worldObj.isRemote) return;
         final int prevHp = MathHelper.floor_float(((EntityLivingBaseExt) entity).getTorohealth$prevHealth());
         final int hp = MathHelper.floor_float(entity.getHealth());
+        if (hp > prevHp + 2 && entity.ticksExisted < 5) {
+            // the mob just spawned, and it mistakenly
+            // renders their whole health as healing
+            return;
+        }
         if (prevHp != hp) {
             DamageParticles.spawnDamageParticle(entity, prevHp - hp);
             ((EntityLivingBaseExt) entity).setTorohealth$prevHealth(hp);

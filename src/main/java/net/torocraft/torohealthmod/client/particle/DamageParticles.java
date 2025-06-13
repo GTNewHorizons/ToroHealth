@@ -21,6 +21,7 @@ public class DamageParticles extends EntityFX {
 
     private final String text;
     private final int color;
+    private float prevParticleScale;
     private boolean grow = true;
 
     private DamageParticles(int damage, World world, double parX, double parY, double parZ, double parMotionX,
@@ -30,6 +31,7 @@ public class DamageParticles extends EntityFX {
         this.particleTextureJitterY = 0.0F;
         this.particleGravity = GRAVITY;
         this.particleScale = (float) ConfigurationHandler.size;
+        this.prevParticleScale = this.particleScale;
         this.particleMaxAge = LIFESPAN;
         this.text = Integer.toString(Math.abs(damage));
         this.color = damage < 0 ? ConfigurationHandler.healColor : ConfigurationHandler.damageColor;
@@ -103,7 +105,8 @@ public class DamageParticles extends EntityFX {
         GL11.glNormal3f(0.0F, 1.0F, 0.0F);
         GL11.glRotatef(-rotationYaw, 0.0F, 1.0F, 0.0F);
         GL11.glRotatef(rotationPitch, 1.0F, 0.0F, 0.0F);
-        final double f1 = this.particleScale * 0.008D;
+        final double f1 = (this.prevParticleScale + (this.particleScale - this.prevParticleScale) * partialTicks)
+                * 0.008D;
         GL11.glScaled(-f1, -f1, f1);
         GL11.glDisable(GL11.GL_LIGHTING);
         GL11.glEnable(GL11.GL_BLEND);
@@ -123,6 +126,7 @@ public class DamageParticles extends EntityFX {
     @Override
     public void onUpdate() {
         super.onUpdate();
+        this.prevParticleScale = this.particleScale;
         if (this.grow) {
             this.particleScale *= 1.1664F;
             if (this.particleScale > ConfigurationHandler.size * 3.0D) {
