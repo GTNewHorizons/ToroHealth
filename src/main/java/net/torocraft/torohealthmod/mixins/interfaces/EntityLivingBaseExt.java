@@ -2,7 +2,7 @@ package net.torocraft.torohealthmod.mixins.interfaces;
 
 public interface EntityLivingBaseExt {
 
-    int getTorohealth$prevHealth();
+    int torohealth$getPrevHealth();
 
-    void setTorohealth$prevHealth(int torohealth$prevHealth);
+    void torohealth$setPrevHealth(int torohealth$prevHealth);
 }

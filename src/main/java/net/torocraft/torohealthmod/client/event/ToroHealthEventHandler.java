@@ -15,16 +15,17 @@ public class ToroHealthEventHandler {
     public void onLivingUpdate(LivingEvent.LivingUpdateEvent event) {
         final EntityLivingBase entity = event.entityLiving;
         if (!entity.worldObj.isRemote) return;
-        final int prevHp = MathHelper.floor_float(((EntityLivingBaseExt) entity).getTorohealth$prevHealth());
+
+        final int prevHp = ((EntityLivingBaseExt) entity).torohealth$getPrevHealth();
         final int hp = MathHelper.floor_float(entity.getHealth());
-        if (hp > prevHp + 2 && entity.ticksExisted < 5) {
-            // the mob just spawned, and it mistakenly
-            // renders their whole health as healing
-            return;
-        }
+
         if (prevHp != hp) {
-            DamageParticles.spawnDamageParticle(entity, prevHp - hp);
-            ((EntityLivingBaseExt) entity).setTorohealth$prevHealth(hp);
+            ((EntityLivingBaseExt) entity).torohealth$setPrevHealth(hp);
+
+            // -1 means that prevHealth was uninitialized because the Living has just spawned
+            if (prevHp != -1) {
+                DamageParticles.spawnDamageParticle(entity, prevHp - hp);
+            }
         }
     }
 
