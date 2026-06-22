@@ -13,13 +13,26 @@ public abstract class MixinEntityLivingBase implements EntityLivingBaseExt {
     private int torohealth$prevHealth = -1;
 
     @Unique
+    private int torohealth$prevMaxHealth = -1;
+
+    @Override
     public int torohealth$getPrevHealth() {
         return torohealth$prevHealth;
     }
 
-    @Unique
+    @Override
+    public int torohealth$getPrevMaxHealth() {
+        return torohealth$prevMaxHealth;
+    }
+
+    @Override
     public void torohealth$setPrevHealth(int prevHealth) {
         this.torohealth$prevHealth = prevHealth;
+    }
+
+    @Override
+    public void torohealth$setPrevMaxHealth(int prevMaxHealth) {
+        this.torohealth$prevMaxHealth = prevMaxHealth;
     }
 
 }

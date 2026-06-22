@@ -16,14 +16,23 @@ public class ToroHealthEventHandler {
         final EntityLivingBase entity = event.entityLiving;
         if (!entity.worldObj.isRemote) return;
 
+        final int prevMaxHealth = ((EntityLivingBaseExt) entity).torohealth$getPrevMaxHealth();
+        final int maxHealth = MathHelper.floor_float(entity.getMaxHealth());
+
+        if (prevMaxHealth != maxHealth) {
+            ((EntityLivingBaseExt) entity).torohealth$setPrevMaxHealth(maxHealth);
+        }
+
         final int prevHealth = ((EntityLivingBaseExt) entity).torohealth$getPrevHealth();
         final int health = MathHelper.floor_float(entity.getHealth());
 
         if (prevHealth != health) {
             ((EntityLivingBaseExt) entity).torohealth$setPrevHealth(health);
 
-            // -1 means that prevHealth wasn't initialized because the Living has just spawned
-            if (prevHealth != -1) {
+            // -1 means that prevHealth wasn't initialized because the Living has just spawned.
+            // Ignore cases where max health was changed (as this most likely signals an external mod modifying health
+            // during entity spawn, like EnderZoo's health modifier).
+            if (prevHealth != -1 && prevMaxHealth == maxHealth) {
                 DamageParticles.spawnDamageParticle(entity, prevHealth - health);
             }
         }
