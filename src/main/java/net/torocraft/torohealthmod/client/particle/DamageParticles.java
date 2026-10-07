@@ -11,6 +11,7 @@ import net.minecraft.world.World;
 import net.torocraft.torohealthmod.client.configuration.ConfigurationHandler;
 
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL13;
 
 public class DamageParticles extends EntityFX {
 
@@ -114,7 +115,22 @@ public class DamageParticles extends EntityFX {
         final int j = mc.fontRenderer.getStringWidth(this.text) / 2;
         GL11.glDepthMask(false);
         GL11.glDisable(GL11.GL_DEPTH_TEST);
-        mc.fontRenderer.drawStringWithShadow(this.text, -j, 0, this.color);
+        final int activeTexture = GL11.glGetInteger(GL13.GL_ACTIVE_TEXTURE);
+        OpenGlHelper.setActiveTexture(OpenGlHelper.lightmapTexUnit);
+        final boolean lightmapEnabled = GL11.glIsEnabled(GL11.GL_TEXTURE_2D);
+        GL11.glDisable(GL11.GL_TEXTURE_2D);
+        OpenGlHelper.setActiveTexture(OpenGlHelper.defaultTexUnit);
+        try {
+            mc.fontRenderer.drawStringWithShadow(this.text, -j, 0, this.color);
+        } finally {
+            OpenGlHelper.setActiveTexture(OpenGlHelper.lightmapTexUnit);
+            if (lightmapEnabled) {
+                GL11.glEnable(GL11.GL_TEXTURE_2D);
+            } else {
+                GL11.glDisable(GL11.GL_TEXTURE_2D);
+            }
+            OpenGlHelper.setActiveTexture(activeTexture);
+        }
         GL11.glEnable(GL11.GL_DEPTH_TEST);
         GL11.glDepthMask(true);
         GL11.glEnable(GL11.GL_LIGHTING);
